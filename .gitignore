@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# CMake build folders
+/build/
+
+# IDE
+.project
+.cproject
+.settings
+
+
