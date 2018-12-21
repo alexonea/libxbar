@@ -151,7 +151,21 @@ main(int argc, const char *argv[])
     auto det = std::find(s_vDeterminers.begin(), s_vDeterminers.end(), sWord);
     if (det != s_vDeterminers.end())
     {
+      /*
+      auto head = idx + 1;
+      std::string sHead;
+
+      while (head <= begin)
+        sHead += vsWords[head++] + " ";
+
+      if (sHead.size() > 0)
+        sHead.erase(sHead.size() - 1);
+
+      begin = idx;
+      */
+
       std::string sHead{vsWords[idx + 1]};
+
       pCurrent = XNode::appendToOrCreate(NP);
       pCurrent->setSpecifier(sWord)->setHead(sHead);
       /* continue; */
@@ -184,18 +198,20 @@ main(int argc, const char *argv[])
      */
     if (pCurrent)
     {
-      if (!nodes.empty())
+      while (!nodes.empty())
       {
         XNode *pPrevious = nodes.top();
-        pCurrent->addComplement(pPrevious);
+        XNode *pWinner = XNode::merge(pCurrent, pPrevious);
+        if (!pWinner)
+          break;
+
+        pCurrent = pWinner;
         nodes.pop();
       }
 
       nodes.push(pCurrent);
     }
   }
-
-  std::cout << "got here\n";
 
   if (!nodes.empty())
     std::cout << "\\documentclass[margin=5mm]{standalone}\n"

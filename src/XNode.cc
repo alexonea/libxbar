@@ -160,17 +160,72 @@ namespace XBar
     if (pNode)
       pOut->addComplement(pNode);
 
+    pOut->setHead();
+
     return pOut;
+  }
+
+  XNode*
+  XNode::merge(XNode *pFirst, XNode *pLast)
+  {
+    if (!pFirst || !pLast)
+      return nullptr;
+
+    switch (pFirst->m_eType)
+    {
+      case NP:
+      {
+        if (pLast->m_eType == VP)
+        {
+          XNode* pInflection = XNode::appendToOrCreate(IP, pLast);
+          return pInflection->setSpecifier(pFirst);
+        }
+        else if (pLast->m_eType == IP)
+          return pLast->setSpecifier(pFirst);
+        else
+          return nullptr;
+      }
+      case PP:
+      {
+        if (pLast->m_eType == NP)
+          return pFirst->addComplement(pLast);
+        else
+          return nullptr;
+      }
+      case VP:
+      {
+        if (pLast->m_eType == NP || pLast->m_eType == PP)
+          return pFirst->addComplement(pLast);
+        else
+          return nullptr;
+      }
+      case IP:
+      {
+        if (pLast->m_eType == VP)
+          return pFirst->addComplement(pLast);
+        else
+          return nullptr;
+      }
+      case CP:
+        return nullptr;
+      default:
+        throw std::runtime_error("Bad operation");
+    }
   }
 
   XNode*
   XNode::setSpecifier(const std::string &sValue)
   {
+    return setSpecifier(new XNode{SPECIFIER, sValue});
+  }
+
+  XNode*
+  XNode::setSpecifier(XNode *pSpecifier)
+  {
     if (!isXP(m_eType))
       throw std::runtime_error("Bad operation");
 
-    m_pLeft.reset(new XNode{SPECIFIER});
-    m_pLeft->m_sValue = sValue;
+    m_pLeft.reset(pSpecifier);
 
     return this;
   }

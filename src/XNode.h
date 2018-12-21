@@ -53,10 +53,12 @@ namespace XBar
     std::string printToLatex ();
 
     XNode* setSpecifier   (const std::string &sValue);
+    XNode* setSpecifier   (XNode *pSpecifier);
     XNode* addComplement  (XNode *pComplement);
-    XNode* setHead        (const std::string &sValue);
+    XNode* setHead        (const std::string &sValue = "");
 
     static XNode* appendToOrCreate  (XNodeType eType, XNode *pNode = nullptr);
+    static XNode* merge             (XNode *pFirst, XNode *pLast);
   private:
     XNodeType                m_eType;
     std::string              m_sValue;
