@@ -105,12 +105,6 @@ std::vector<std::string> s_vDeterminers
   "quite",
 };
 
-static
-std::vector<std::string> s_vVerbs =
-{
-  "return",
-};
-
 int
 main(int argc, const char *argv[])
 {
@@ -175,7 +169,7 @@ main(int argc, const char *argv[])
      * Look for prepositions
      */
     auto pp = std::find(s_vPrepositions.begin(), s_vPrepositions.end(), sWord);
-    if (pp != s_vPrepositions.end())
+    if (pp != s_vPrepositions.end() && !pCurrent)
     {
       pCurrent = XNode::appendToOrCreate(PP);
       pCurrent->setHead(sWord);
@@ -185,11 +179,13 @@ main(int argc, const char *argv[])
     /*
      * Look for verbs
      */
-    auto verb = std::find(s_vVerbs.begin(), s_vVerbs.end(), sWord);
-    if (verb != s_vVerbs.end())
+    Verb *pV = deduceConjugation(sWord);
+    //auto verb = std::find(s_vVerbs.begin(), s_vVerbs.end(), sWord);
+    //if (verb != s_vVerbs.end())
+    if (pV && !pCurrent)
     {
       pCurrent = XNode::appendToOrCreate(VP);
-      pCurrent->setHead(sWord);
+      pCurrent->setHead(pV);
       /* continue; */
     }
 

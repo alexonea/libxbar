@@ -20,6 +20,8 @@
 #ifndef XNODE_H_
 #define XNODE_H_
 
+#include "verbs.h"
+
 #include <memory>
 #include <string>
 
@@ -56,14 +58,17 @@ namespace XBar
     XNode* setSpecifier   (XNode *pSpecifier);
     XNode* addComplement  (XNode *pComplement);
     XNode* setHead        (const std::string &sValue = "");
+    XNode* setHead        (Verb *pValue);
+    XNode* getHead        ();
 
     static XNode* appendToOrCreate  (XNodeType eType, XNode *pNode = nullptr);
     static XNode* merge             (XNode *pFirst, XNode *pLast);
   private:
-    XNodeType                m_eType;
-    std::string              m_sValue;
-    std::unique_ptr<XNode>  m_pLeft;
-    std::unique_ptr<XNode>  m_pRight;
+    XNodeType                 m_eType;
+    std::string               m_sValue;
+    std::unique_ptr<Verb>     m_pVerb;
+    std::unique_ptr<XNode>    m_pLeft;
+    std::unique_ptr<XNode>    m_pRight;
   };
 }
 

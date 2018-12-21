@@ -22,6 +22,8 @@
 #include <sstream>
 #include <stdexcept>
 
+#include <iostream>
+
 namespace XBar
 {
   bool
@@ -178,6 +180,14 @@ namespace XBar
         if (pLast->m_eType == VP)
         {
           XNode* pInflection = XNode::appendToOrCreate(IP, pLast);
+
+          if (pLast->getHead()->m_pVerb)
+          {
+            pInflection->getHead()->m_sValue = "-" + pLast->getHead()->m_pVerb->sSuffix;
+            pInflection->getHead()->m_pVerb = std::move(pLast->getHead()->m_pVerb);
+
+          }
+
           return pInflection->setSpecifier(pFirst);
         }
         else if (pLast->m_eType == IP)
@@ -287,6 +297,77 @@ namespace XBar
       }
 
       return m_pLeft->setHead(sValue);
+    }
+
+   throw std::runtime_error("Bad operation");
+  }
+
+  XNode*
+  XNode::setHead(Verb *pValue)
+  {
+    if (!pValue)
+      return this;
+
+    if (isX(m_eType))
+    {
+      m_sValue = pValue->sRoot;
+      m_pVerb.reset(pValue);
+      return this;
+    }
+
+    if (isXP(m_eType))
+    {
+      if (!m_pRight)
+        addComplement(nullptr);
+
+      return m_pRight->setHead(pValue);
+    }
+
+    if (isXBAR(m_eType))
+    {
+      if (!m_pLeft)
+      {
+        /*
+         * We again rely on the relative position of XBAR and X in the
+         * definition of the enumeration.
+         */
+        XNodeType eHeadType = static_cast<XNodeType> (m_eType + 1);
+        m_pLeft.reset(new XNode{eHeadType});
+      }
+
+      return m_pLeft->setHead(pValue);
+    }
+
+   throw std::runtime_error("Bad operation");
+  }
+
+  XNode*
+  XNode::getHead()
+  {
+    if (isX(m_eType))
+      return this;
+
+    if (isXP(m_eType))
+    {
+      if (!m_pRight)
+        addComplement(nullptr);
+
+      return m_pRight->getHead();
+    }
+
+    if (isXBAR(m_eType))
+    {
+      if (!m_pLeft)
+      {
+        /*
+         * We again rely on the relative position of XBAR and X in the
+         * definition of the enumeration.
+         */
+        XNodeType eHeadType = static_cast<XNodeType> (m_eType + 1);
+        m_pLeft.reset(new XNode{eHeadType});
+      }
+
+      return m_pLeft->getHead();
     }
 
    throw std::runtime_error("Bad operation");
