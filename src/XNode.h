@@ -50,6 +50,7 @@ namespace XBar
   public:
     XNode             (XNodeType eType);
     XNode             (XNodeType eType, const std::string &sValue);
+    XNode             (const XNode &other);
 
     XNode* getLeft    () const        { return m_pLeft.get();   };
     XNode* getRight   () const        { return m_pRight.get();  };
@@ -65,6 +66,8 @@ namespace XBar
 
     static XNode* appendToOrCreate  (XNodeType eType, XNode *pNode = nullptr);
     static XNode* merge             (XNode *pFirst, XNode *pLast);
+
+    XNode*        clone();
   private:
     XNodeType                 m_eType;
     XValue                    m_xValue;

@@ -132,6 +132,11 @@ namespace XBar
   , m_xValue{sValue}
   {}
 
+  XNode::XNode(const XNode &other)
+  : m_eType{other.m_eType}
+  , m_xValue{other.m_xValue}
+  {}
+
   std::string
   XNode::printToLatex()
   {
@@ -371,5 +376,18 @@ namespace XBar
     }
 
    throw std::runtime_error("Bad operation");
+  }
+
+  XNode*
+  XNode::clone()
+  {
+    XNode *out = new XNode{*this};
+    if (m_pLeft)
+      out->m_pLeft.reset(m_pLeft->clone());
+
+    if (m_pRight)
+      out->m_pRight.reset(m_pRight->clone());
+
+    return out;
   }
 }
