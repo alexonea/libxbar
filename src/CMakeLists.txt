@@ -1,5 +1,6 @@
 set(SOURCES
 	XNode.cc
+	XValue.cc
 	verbs.cc
 	WordNet.cc
 )

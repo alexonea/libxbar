@@ -124,12 +124,12 @@ namespace XBar
 
   XNode::XNode(enum XNodeType eType)
   : m_eType{eType}
-  , m_sValue{toString(eType)}
+  , m_xValue{toString(eType)}
   {}
 
   XNode::XNode(XNodeType eType, const std::string &sValue)
   : m_eType{eType}
-  , m_sValue{sValue}
+  , m_xValue{sValue}
   {}
 
   std::string
@@ -141,7 +141,7 @@ namespace XBar
     if (isSpecifier(m_eType) || isX(m_eType))
       ss << toString(m_eType) << " ";
 
-    ss << m_sValue << " ";
+    ss << m_xValue.toString() << " ";
 
     if (m_pLeft)
       ss << m_pLeft->printToLatex();
@@ -183,7 +183,7 @@ namespace XBar
 
           if (pLast->getHead()->m_pVerb)
           {
-            pInflection->getHead()->m_sValue = "-" + pLast->getHead()->m_pVerb->sSuffix;
+            pInflection->getHead()->m_xValue = "-" + pLast->getHead()->m_pVerb->sSuffix;
             pInflection->getHead()->m_pVerb = std::move(pLast->getHead()->m_pVerb);
 
           }
@@ -272,7 +272,7 @@ namespace XBar
   {
     if (isX(m_eType))
     {
-      m_sValue = sValue;
+      m_xValue = sValue;
       return this;
     }
 
@@ -310,7 +310,7 @@ namespace XBar
 
     if (isX(m_eType))
     {
-      m_sValue = pValue->sRoot;
+      m_xValue = pValue->sRoot;
       m_pVerb.reset(pValue);
       return this;
     }

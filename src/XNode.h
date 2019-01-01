@@ -25,6 +25,8 @@
 #include <memory>
 #include <string>
 
+#include "XValue.h"
+
 namespace XBar
 {
   enum XNodeType
@@ -65,7 +67,7 @@ namespace XBar
     static XNode* merge             (XNode *pFirst, XNode *pLast);
   private:
     XNodeType                 m_eType;
-    std::string               m_sValue;
+    XValue                    m_xValue;
     std::unique_ptr<Verb>     m_pVerb;
     std::unique_ptr<XNode>    m_pLeft;
     std::unique_ptr<XNode>    m_pRight;
