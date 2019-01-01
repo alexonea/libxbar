@@ -1,5 +1,5 @@
 /*
- *  XValue.h
+ *  XVerb.h
  *
  *  Copyright (C) 2019 Alexandru N. Onea <alexandru.onea@toporcomputing.com>
  *
@@ -17,29 +17,48 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef XVALUE_H_
-#define XVALUE_H_
+#ifndef XVERB_H_
+#define XVERB_H_
 
-#include <string>
+#include "XValue.h"
 
 namespace XBar
 {
-  class XValue
+  enum VerbTense
+  {
+    INVALID = 0,
+    PRESENT,
+    PAST,
+    PRESENT_PERFECT,
+    PAST_PERFECT,
+    FUTURE_I,
+    FUTURE_II,
+    CONDITIONAL_I,
+    CONDITIONAL_II,
+  };
+
+  struct VerbTenseInfo
+  {
+    VerbTense eTense;
+    bool  bProgressive;
+
+    VerbTenseInfo() : eTense(INVALID), bProgressive(false) {};
+  };
+
+
+  class XVerb : public XValue
   {
   public:
-    XValue(const std::string &sBase);
-    XValue()          = default;
-    virtual ~XValue() = default;
+    XVerb(const std::string &sBase);
+    XVerb()           = default;
+    virtual ~XVerb()  = default;
 
-    std::string toString();
-
-    void        setValue(const std::string &sBase) { m_sBase = sBase; };
-    std::string getValue()                         { return m_sBase;  };
+    void setTense(bool bProgressive, const VerbTense &eTense = INVALID);
+    void setTense(const VerbTense &eTense);
+    void setTense(const VerbTenseInfo &tenseInfo);
   private:
-    std::string m_sBase;
-
-    virtual std::string doToString();
+    VerbTenseInfo m_tense;
   };
 }
 
-#endif /* XVALUE_H_ */
+#endif /* XVERB_H_ */

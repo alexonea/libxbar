@@ -1,5 +1,5 @@
 /*
- *  XValue.h
+ *  XParser.cc
  *
  *  Copyright (C) 2019 Alexandru N. Onea <alexandru.onea@toporcomputing.com>
  *
@@ -17,29 +17,13 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef XVALUE_H_
-#define XVALUE_H_
-
-#include <string>
+#include "XParser.h"
 
 namespace XBar
 {
-  class XValue
+  XNode*
+  parseLine(const std::string &sLine)
   {
-  public:
-    XValue(const std::string &sBase);
-    XValue()          = default;
-    virtual ~XValue() = default;
-
-    std::string toString();
-
-    void        setValue(const std::string &sBase) { m_sBase = sBase; };
-    std::string getValue()                         { return m_sBase;  };
-  private:
-    std::string m_sBase;
-
-    virtual std::string doToString();
-  };
+    return nullptr;
+  }
 }
-
-#endif /* XVALUE_H_ */
