@@ -30,6 +30,7 @@ namespace XBar
 {
   enum PartOfSpeech
   {
+    GENERIC     = 0,
     NOUN        = 1,
     VERB        = 2,
     ADJECTIVE   = 3,
@@ -43,16 +44,16 @@ namespace XBar
    *
    * Also, below, the meaning of all bits within the PartDescriptor
    */
-  using                 PartDescriptor  = std::uint16_t;
-  extern std::uint16_t  PartVERB;
-  extern std::uint16_t  PartNOUN;
-  extern std::uint16_t  PartADJECTIVE;
-  extern std::uint16_t  PartADVERB;
-  /*
-   * Special flag for words that have the base (stem, root) different from the
-   * form of occurrence.
-   */
-  extern std::uint16_t  PartSPECIAL;
+  struct POSDescriptor
+  {
+    std::uint16_t bInflected : 1;
+    std::uint16_t bNoun : 1;
+    std::uint16_t bVerb : 1;
+    std::uint16_t bAdjective : 1;
+    std::uint16_t bAdverb : 1;
+    std::uint16_t bPreposition : 1;
+    std::uint16_t bDeterminer : 1;
+  };
 
   class WordNet
   {
@@ -62,8 +63,7 @@ namespace XBar
     WordNet(const WordNet &)        = delete;
     void operator=(const WordNet &) = delete;
 
-    bool            searchPart(const std::string &sWord, PartOfSpeech part);
-    PartDescriptor  searchPart(const std::string &sWord);
+    POSDescriptor  searchPart(const std::string &sWord);
   private:
     WordNet();
   };

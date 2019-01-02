@@ -23,16 +23,6 @@
 
 namespace XBar
 {
-  std::uint16_t PartVERB        = (1 << VERB);
-  std::uint16_t PartNOUN        = (1 << NOUN);
-  std::uint16_t PartADJECTIVE   = (1 << ADJECTIVE);
-  std::uint16_t PartADVERB      = (1 << ADVERB);
-  /*
-   * Special flag for words that have the base (stem, root) different from the
-   * form of occurrence.
-   */
-  std::uint16_t PartSPECIAL     = (1 << 0);
-
   WordNet::WordNet()
   {
     wninit();
@@ -45,17 +35,10 @@ namespace XBar
     return _wnInstance;
   }
 
-  bool
-  WordNet::searchPart(const std::string &sWord, PartOfSpeech part)
-  {
-    PartDescriptor pd = searchPart(sWord);
-    return ((pd & part) > 0);
-  }
-
-  PartDescriptor
+  POSDescriptor
   WordNet::searchPart(const std::string &sWord)
   {
-    PartDescriptor pd = 0;
+    POSDescriptor pd = { 0 };
     char *czBase = nullptr;
 
     /*
@@ -65,23 +48,35 @@ namespace XBar
      */
     czBase = morphstr((char *) sWord.c_str(), VERB);
     if (czBase)
-      pd |= PartVERB | PartSPECIAL;
+      pd.bVerb = pd.bInflected = 1;
 
     czBase = morphstr((char *) sWord.c_str(), NOUN);
     if (czBase)
-      pd |= PartNOUN | PartSPECIAL;
+      pd.bNoun = pd.bInflected = 1;
 
     czBase = morphstr((char *) sWord.c_str(), ADV);
     if (czBase)
-      pd |= PartADVERB | PartSPECIAL;
+      pd.bAdverb = pd.bInflected = 1;
 
     czBase = morphstr((char *) sWord.c_str(), ADJ);
     if (czBase)
-      pd |= PartADJECTIVE | PartSPECIAL;
+      pd.bAdjective = pd.bInflected = 1;
 
 
     unsigned int iRes = in_wn((char *) sWord.c_str(), ALL_POS);
-    return pd | iRes;
+    if (iRes & (1 << VERB))
+      pd.bVerb = 1;
+
+    if (iRes & (1 << NOUN))
+      pd.bNoun = 1;
+
+    if (iRes & (1 << ADJ))
+      pd.bAdjective = 1;
+
+    if (iRes & (1 << ADV))
+      pd.bAdverb = 1;
+
+    return pd;
   }
 }
 
