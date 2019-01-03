@@ -50,8 +50,11 @@ namespace XBar
     XNode             (XNodeType eType, const std::string &sValue);
     XNode             (const XNode &other);
 
-    XNode* getLeft    () const        { return m_pLeft.get();   };
-    XNode* getRight   () const        { return m_pRight.get();  };
+    XNode*    getLeft () const        { return m_pLeft.get();   };
+    XNode*    getRight() const        { return m_pRight.get();  };
+    XNodeType getType () const        { return m_eType;         };
+
+    XValue*   getValue() const        { return m_pValue.get();  };
 
     std::string printToLatex ();
 

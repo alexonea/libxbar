@@ -136,7 +136,12 @@ namespace XBar
   : m_eType{other.m_eType}
   {
     if (other.m_pValue)
-      m_pValue.reset(m_pValue->clone());
+    {
+//      std::cerr << "CLONING VALUE\n";
+//      std::cerr <<  m_pValue.get() << " IS TE VALUE" << std::endl;
+//      std::cerr <<  m_pValue->toString() << std::endl;
+      m_pValue.reset(other.m_pValue->clone());
+    }
   }
 
 

@@ -20,6 +20,9 @@
 #ifndef XVERB_H_
 #define XVERB_H_
 
+#include <string>
+#include <vector>
+
 #include "XValue.h"
 
 namespace XBar
@@ -57,9 +60,12 @@ namespace XBar
     void setTense(const VerbTense &eTense);
     void setTense(const VerbTenseInfo &tenseInfo);
 
+    void addAdverb(const std::string &sAdverb);
+
     virtual XValue* clone() override;
   private:
-    VerbTenseInfo m_tense;
+    VerbTenseInfo             m_tense;
+    std::vector<std::string>  m_vAdverbs;
   };
 }
 

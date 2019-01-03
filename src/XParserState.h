@@ -1,5 +1,5 @@
 /*
- *  XParser.h
+ *  XParserState.h
  *
  *  Copyright (C) 2019 Alexandru N. Onea <alexandru.onea@toporcomputing.com>
  *
@@ -17,31 +17,25 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef XPARSER_H_
-#define XPARSER_H_
+#ifndef XPARSERSTATE_H_
+#define XPARSERSTATE_H_
 
-#include <string>
-#include <vector>
-#include <stack>
+#include <list>
 
 #include "XNode.h"
 
 namespace XBar
 {
-  class XParserState;
-
-  class XParser
+  struct XParserState
   {
-  public:
-    XParser(const std::string &sInput);
+    XParserState() = default;
+    XParserState(const XParserState &other);
+    XParserState(XParserState &&other);
+    XParserState& operator=(const XParserState &other);
+    XParserState& operator=(XParserState &&other);
 
-    XNode* parse();
-  private:
-    std::stack<std::string>     m_vsInput;
-    std::vector<XParserState*>  m_vStates;
+    std::list<XNode*> nodes;
   };
-
-  extern XNode* parseLine(const std::string &sLine);
 }
 
-#endif /* XPARSER_H_ */
+#endif /* XPARSERSTATE_H_ */

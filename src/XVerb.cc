@@ -54,4 +54,10 @@ namespace XBar
   {
     return new XVerb{*this};
   }
+
+  void
+  XVerb::addAdverb(const std::string &sAdverb)
+  {
+    m_vAdverbs.push_back(sAdverb);
+  }
 }

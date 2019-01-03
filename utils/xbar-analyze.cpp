@@ -28,6 +28,7 @@
 #include "XNode.h"
 #include "XVerb.h"
 #include "WordNet.h"
+#include "XParser.h"
 
 static
 std::vector<std::string> s_vPrepositions
@@ -206,11 +207,15 @@ main(int argc, const char *argv[])
     }
   }
 
-  if (!nodes.empty())
+  XNode* pRes = parseLine(sInput);
+  std::cerr << pRes << "\n";
+
+  /*if (!nodes.empty())*/
+  if (pRes)
     std::cout << "\\documentclass[margin=5mm]{standalone}\n"
               << "\\usepackage{tikz-qtree}\n"
               << "\\begin{document}\n"
-              << "\\Tree " << nodes.top()->printToLatex() << "\n"
+              << "\\Tree " << pRes->printToLatex() << "\n"
               << "\\end{document}\n";
 
   return 0;

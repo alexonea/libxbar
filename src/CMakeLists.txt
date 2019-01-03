@@ -4,6 +4,7 @@ set(SOURCES
 	XVerb.cc
 	XNoun.cc
 	XParser.cc
+	XParserState.cc
 	WordNet.cc
 )
 

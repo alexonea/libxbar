@@ -19,10 +19,91 @@
 
 #include "WordNet.h"
 
+#include <vector>
+#include <algorithm>
+
 #include <wn.h>
 
 namespace XBar
 {
+  static
+  std::vector<std::string> s_vPrepositions
+  {
+    "on",
+    "in",
+    "at",
+    "since",
+    "for",
+    "ago",
+    "before",
+    "to",
+    "past",
+    "to",
+    "till",
+    "until",
+    "by",
+    "next to",
+    "beside",
+    "under",
+    "below",
+    "over",
+    "above",
+    "across",
+    "through",
+    "into",
+    "towards",
+    "onto",
+    "from",
+    "of",
+    "off",
+    "out of",
+    "about",
+  };
+
+  static
+  std::vector<std::string> s_vDeterminers
+  {
+    "the",
+    "a",
+    "an",
+    "this",
+    "that",
+    "these",
+    "those",
+    "my",
+    "your",
+    "his",
+    "her",
+    "its",
+    "our",
+    "their",
+    "a few",
+    "a little",
+    "much",
+    "many",
+    "a lot of",
+    "most",
+    "some",
+    "any",
+    "enough",
+    "one",
+    "ten",
+    "thirty",
+    "all",
+    "both",
+    "half",
+    "either",
+    "neither",
+    "each",
+    "every",
+    "other",
+    "another",
+    "such",
+    "what",
+    "rather",
+    "quite",
+  };
+
   WordNet::WordNet()
   {
     wninit();
@@ -39,6 +120,15 @@ namespace XBar
   WordNet::searchPart(const std::string &sWord)
   {
     POSDescriptor pd = { 0 };
+
+    auto det = std::find(s_vDeterminers.begin(), s_vDeterminers.end(), sWord);
+    if (det != s_vDeterminers.end())
+      pd.bDeterminer = 1;
+
+    auto pp = std::find(s_vPrepositions.begin(), s_vPrepositions.end(), sWord);
+    if (pp != s_vPrepositions.end())
+      pd.bPreposition = 1;
+
     char *czBase = nullptr;
 
     /*

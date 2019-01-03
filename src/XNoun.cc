@@ -34,4 +34,10 @@ namespace XBar
   {
     return new XNoun{*this};
   }
+
+  void
+  XNoun::addAttribute(const std::string &sAttribute)
+  {
+    m_vAttributes.push_back(sAttribute);
+  }
 }
