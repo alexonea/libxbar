@@ -1,5 +1,5 @@
 /*
- *  XVerb.h
+ *  XNoun.h
  *
  *  Copyright (C) 2019 Alexandru N. Onea <alexandru.onea@toporcomputing.com>
  *
@@ -17,50 +17,28 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef XVERB_H_
-#define XVERB_H_
+#ifndef XNOUN_H_
+#define XNOUN_H_
+
+#include <vector>
 
 #include "XValue.h"
 
 namespace XBar
 {
-  enum VerbTense
-  {
-    INVALID = 0,
-    PRESENT,
-    PAST,
-    PRESENT_PERFECT,
-    PAST_PERFECT,
-    FUTURE_I,
-    FUTURE_II,
-    CONDITIONAL_I,
-    CONDITIONAL_II,
-  };
-
-  struct VerbTenseInfo
-  {
-    VerbTense eTense;
-    bool  bProgressive;
-
-    VerbTenseInfo() : eTense(INVALID), bProgressive(false) {};
-  };
-
-
-  class XVerb : public XValue
+  class XNoun : public XValue
   {
   public:
-    XVerb();
-    XVerb(const std::string &sBase);
-    virtual ~XVerb()  = default;
+    XNoun();
+    XNoun(const std::string &sBase);
+    virtual ~XNoun()  = default;
 
-    void setTense(bool bProgressive, const VerbTense &eTense = INVALID);
-    void setTense(const VerbTense &eTense);
-    void setTense(const VerbTenseInfo &tenseInfo);
+    void addAttribute(const std::string &sAttribute);
 
     virtual XValue* clone() override;
   private:
-    VerbTenseInfo m_tense;
+    std::vector<std::string> m_vAttributes;
   };
 }
 
-#endif /* XVERB_H_ */
+#endif /* XNOUN_H_ */

@@ -22,21 +22,29 @@
 
 #include <string>
 
+#include "WordNet.h"
+
 namespace XBar
 {
   class XValue
   {
   public:
-    XValue(const std::string &sBase);
-    XValue()          = default;
+    XValue(const std::string &sBase, const PartOfSpeech &ePos = GENERIC);
+    XValue(const PartOfSpeech &ePos);
+    XValue();
     virtual ~XValue() = default;
 
-    std::string toString();
+    std::string   toString();
 
     void        setValue(const std::string &sBase) { m_sBase = sBase; };
     std::string getValue()                         { return m_sBase;  };
+
+    virtual PartOfSpeech getPOS()                  { return m_ePos;   };
+
+    virtual XValue*      clone();
   private:
-    std::string m_sBase;
+    std::string   m_sBase;
+    PartOfSpeech  m_ePos;
 
     virtual std::string doToString();
   };

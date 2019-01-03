@@ -124,18 +124,21 @@ namespace XBar
 
   XNode::XNode(enum XNodeType eType)
   : m_eType{eType}
-  , m_xValue{toString(eType)}
+  , m_pValue{new XValue{toString(eType)}}
   {}
 
   XNode::XNode(XNodeType eType, const std::string &sValue)
   : m_eType{eType}
-  , m_xValue{sValue}
+  , m_pValue{new XValue{sValue}}
   {}
 
   XNode::XNode(const XNode &other)
   : m_eType{other.m_eType}
-  , m_xValue{other.m_xValue}
-  {}
+  {
+    if (other.m_pValue)
+      m_pValue.reset(m_pValue->clone());
+  }
+
 
   std::string
   XNode::printToLatex()
@@ -146,7 +149,7 @@ namespace XBar
     if (isSpecifier(m_eType) || isX(m_eType))
       ss << toString(m_eType) << " ";
 
-    ss << m_xValue.toString() << " ";
+    ss << m_pValue->toString() << " ";
 
     if (m_pLeft)
       ss << m_pLeft->printToLatex();
@@ -186,11 +189,12 @@ namespace XBar
         {
           XNode* pInflection = XNode::appendToOrCreate(IP, pLast);
 
-          if (pLast->getHead()->m_pVerb)
+          if (pLast->getHead()->m_pValue &&
+              pLast->getHead()->m_pValue->getPOS() == VERB)
           {
-            pInflection->getHead()->m_xValue = "-" + pLast->getHead()->m_pVerb->sSuffix;
-            pInflection->getHead()->m_pVerb = std::move(pLast->getHead()->m_pVerb);
-
+            /*
+             * Copy the suffix to the inflection head!
+             */
           }
 
           return pInflection->setSpecifier(pFirst);
@@ -210,7 +214,7 @@ namespace XBar
       case VP:
       {
         if (pLast->m_eType == NP || pLast->m_eType == PP)
-          return pFirst->addComplement(pLast);
+         return pFirst->addComplement(pLast);
         else
           return nullptr;
       }
@@ -277,7 +281,11 @@ namespace XBar
   {
     if (isX(m_eType))
     {
-      m_xValue = sValue;
+      if (m_pValue)
+        m_pValue->setValue(sValue);
+      else
+        m_pValue.reset(new XValue{sValue});
+
       return this;
     }
 
@@ -308,15 +316,11 @@ namespace XBar
   }
 
   XNode*
-  XNode::setHead(Verb *pValue)
+  XNode::setHead(XValue *pValue)
   {
-    if (!pValue)
-      return this;
-
     if (isX(m_eType))
     {
-      m_xValue = pValue->sRoot;
-      m_pVerb.reset(pValue);
+      m_pValue.reset(pValue);
       return this;
     }
 

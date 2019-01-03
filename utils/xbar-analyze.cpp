@@ -26,6 +26,8 @@
 #include <stack>
 
 #include "XNode.h"
+#include "XVerb.h"
+#include "WordNet.h"
 
 static
 std::vector<std::string> s_vPrepositions
@@ -139,54 +141,49 @@ main(int argc, const char *argv[])
     std::string sWord{vsWords[idx]};
     std::transform(sWord.begin(), sWord.end(), sWord.begin(), ::tolower);
 
+    POSDescriptor pos = WordNet::getInstance().searchPart(sWord);
+
     /*
      * Look for determiners
      */
-    auto det = std::find(s_vDeterminers.begin(), s_vDeterminers.end(), sWord);
-    if (det != s_vDeterminers.end())
     {
-      /*
-      auto head = idx + 1;
-      std::string sHead;
+    auto det = std::find(s_vDeterminers.begin(), s_vDeterminers.end(), sWord);
+      if (det != s_vDeterminers.end())
+      {
+        /*
+         * For the moment only look at next word and assume it is the noun
+         */
+        std::string sHead{vsWords[idx + 1]};
 
-      while (head <= begin)
-        sHead += vsWords[head++] + " ";
-
-      if (sHead.size() > 0)
-        sHead.erase(sHead.size() - 1);
-
-      begin = idx;
-      */
-
-      std::string sHead{vsWords[idx + 1]};
-
-      pCurrent = XNode::appendToOrCreate(NP);
-      pCurrent->setSpecifier(sWord)->setHead(sHead);
-      /* continue; */
+        pCurrent = XNode::appendToOrCreate(NP);
+        pCurrent->setSpecifier(sWord)->setHead(sHead);
+        /* continue; */
+      }
     }
 
     /*
      * Look for prepositions
      */
-    auto pp = std::find(s_vPrepositions.begin(), s_vPrepositions.end(), sWord);
-    if (pp != s_vPrepositions.end() && !pCurrent)
     {
-      pCurrent = XNode::appendToOrCreate(PP);
-      pCurrent->setHead(sWord);
-      /* continue; */
+      auto pp = std::find(s_vPrepositions.begin(), s_vPrepositions.end(), sWord);
+      if (pp != s_vPrepositions.end() && !pCurrent)
+      {
+        pCurrent = XNode::appendToOrCreate(PP);
+        pCurrent->setHead(sWord);
+        /* continue; */
+      }
     }
 
     /*
      * Look for verbs
      */
-    Verb *pV = deduceConjugation(sWord);
-    //auto verb = std::find(s_vVerbs.begin(), s_vVerbs.end(), sWord);
-    //if (verb != s_vVerbs.end())
-    if (pV && !pCurrent)
     {
-      pCurrent = XNode::appendToOrCreate(VP);
-      pCurrent->setHead(pV);
-      /* continue; */
+      if ((pos.bVerb && !pos.bNoun) && !pCurrent)
+      {
+        pCurrent = XNode::appendToOrCreate(VP);
+        pCurrent->setHead(new XVerb{sWord});
+        /* continue; */
+      }
     }
 
     /*

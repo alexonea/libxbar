@@ -21,8 +21,17 @@
 
 namespace XBar
 {
-  XValue::XValue(const std::string &sBase)
+  XValue::XValue()
+  : m_ePos{GENERIC}
+  {}
+
+  XValue::XValue(const PartOfSpeech &ePos)
+  : m_ePos{ePos}
+  {}
+
+  XValue::XValue(const std::string &sBase, const PartOfSpeech &ePos)
   : m_sBase{sBase}
+  , m_ePos{ePos}
   {}
 
   std::string
@@ -35,5 +44,11 @@ namespace XBar
   XValue::doToString()
   {
     return m_sBase;
+  }
+
+  XValue*
+  XValue::clone()
+  {
+    return new XValue{m_sBase};
   }
 }

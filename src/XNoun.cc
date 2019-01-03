@@ -1,5 +1,5 @@
 /*
- *  XVerb.cc
+ *  XNoun.cc
  *
  *  Copyright (C) 2019 Alexandru N. Onea <alexandru.onea@toporcomputing.com>
  *
@@ -17,41 +17,21 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "XVerb.h"
+#include "XNoun.h"
 
 namespace XBar
 {
-  XVerb::XVerb()
-  : XValue{VERB}
+  XNoun::XNoun()
+  : XValue{NOUN}
   {}
 
-  XVerb::XVerb(const std::string &sBase)
-  : XValue{sBase, VERB}
+  XNoun::XNoun(const std::string &sBase)
+  : XValue{sBase, NOUN}
   {}
-
-  void
-  XVerb::setTense(bool bProgressive, const VerbTense &eTense)
-  {
-    m_tense.bProgressive = bProgressive;
-    if (eTense != INVALID)
-      m_tense.eTense = eTense;
-  }
-
-  void
-  XVerb::setTense(const VerbTense &eTense)
-  {
-    m_tense.eTense = eTense;
-  }
-
-  void
-  XVerb::setTense(const VerbTenseInfo &tenseInfo)
-  {
-    m_tense = tenseInfo;
-  }
 
   XValue*
-  XVerb::clone()
+  XNoun::clone()
   {
-    return new XVerb{*this};
+    return new XNoun{*this};
   }
 }
